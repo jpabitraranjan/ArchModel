@@ -1,0 +1,28 @@
+{
+  "openapi": "3.0.0",
+  "info": {"title": "Trade Blotter API", "version": "1.4.0", "description": "Trade-level records for the operations desk."},
+  "paths": {
+    "/v1/trades": {
+      "get": {
+        "summary": "List executed trades",
+        "description": "Returns executed trades, newest first. Does not return aggregates.",
+        "parameters": [
+          {"name": "from_date", "in": "query", "required": true, "schema": {"type": "string"}, "description": "Inclusive start trade date (ISO 8601)."},
+          {"name": "to_date", "in": "query", "required": true, "schema": {"type": "string"}, "description": "Inclusive end trade date."},
+          {"name": "participant_type", "in": "query", "schema": {"type": "string"}, "description": "Filter by AP, HOUSE or CLIENT."}
+        ],
+        "responses": {"200": {"description": "OK", "content": {"application/json": {"schema": {"$ref": "#/components/schemas/TradeList"}}}}}
+      }
+    }
+  },
+  "components": {"schemas": {
+    "TradeList": {"type": "object", "properties": {"items": {"type": "array", "items": {"$ref": "#/components/schemas/Trade"}}, "next_cursor": {"type": "string", "description": "Opaque cursor for the next page."}}},
+    "Trade": {"type": "object", "properties": {
+      "trade_id": {"type": "string", "description": "Unique trade identifier."},
+      "isin": {"type": "string", "description": "ISIN of the traded security."},
+      "side": {"type": "string", "enum": ["BUY", "SELL"], "description": "Direction from the participant's perspective."},
+      "quantity": {"type": "number", "description": "Number of units traded."},
+      "price": {"type": "number", "description": "Execution price in trade currency."},
+      "trade_date": {"type": "string", "format": "date", "description": "Execution date."}}}
+  }}
+}

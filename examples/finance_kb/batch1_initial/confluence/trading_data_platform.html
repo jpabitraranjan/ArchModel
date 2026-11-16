@@ -1,0 +1,17 @@
+<html><head><title>Trading Data Platform Overview</title></head><body>
+<h1>Trading Data Platform Overview</h1>
+<p>This page describes where trading and reference data lives and how it is refreshed.</p>
+<h2>Trade storage</h2>
+<p>All executed trades, both house and Authorised Participant (AP) flow, are stored in the Trading Data Warehouse, table <b>dwh.trades</b>. The table is loaded by an end-of-day batch at 20:00 UTC; intraday trades are published to the Kafka topic <b>trades.executed.v1</b> within two seconds of execution.</p>
+<h2>Participants</h2>
+<p>Authorised Participants are mastered in <b>dwh.participants</b>. Participant type is one of AP, HOUSE, CLIENT.</p>
+<h2>Reference data</h2>
+<p>Security reference data, including GICS sector and industry classification, lives in <b>ref.security_master</b> and is owned by the Data Governance team. Classification changes are applied monthly.</p>
+<h2>Existing consumers</h2>
+<ul><li>The Trade Blotter API exposes trade-level records and is used by the operations desk.</li>
+<li>There is no aggregated net-flow view today; analysts compute it in spreadsheets.</li></ul>
+<h2>Known limitations</h2>
+<table><tr><th>Item</th><th>Detail</th></tr>
+<tr><td>Corrections</td><td>Trade corrections arrive as new rows with correction_of populated; consumers must exclude superseded rows.</td></tr>
+<tr><td>Currency</td><td>Prices are in trade currency; no FX conversion is stored.</td></tr></table>
+</body></html>

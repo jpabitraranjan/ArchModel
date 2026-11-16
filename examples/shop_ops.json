@@ -1,0 +1,17 @@
+[
+  {"op": "add_node", "type": "ui_client", "name": "Web App", "ref": "ui", "properties": {"framework": "React"}},
+  {"op": "add_node", "type": "load_balancer", "name": "Edge LB", "ref": "lb"},
+  {"op": "add_node", "type": "api_service", "name": "Order API", "ref": "api", "properties": {"language": "python", "replicas": 3}},
+  {"op": "add_node", "type": "database", "name": "Orders DB", "ref": "db", "properties": {"engine": "postgresql", "replication": "primary_replica"}},
+  {"op": "add_node", "type": "cache", "name": "Session Cache", "ref": "cache"},
+  {"op": "connect", "type": "http_call", "source": "@ui", "target": "@lb"},
+  {"op": "connect", "type": "routes_to", "source": "@lb", "target": "@api"},
+  {"op": "connect", "type": "db_connection", "source": "@api", "target": "@db"},
+  {"op": "connect", "type": "cache_access", "source": "@api", "target": "@cache"},
+  {"op": "add_node", "type": "class", "name": "OrderRepository", "parent_id": "@api", "ref": "repo"},
+  {"op": "add_node", "type": "table", "name": "orders", "parent_id": "@db", "ref": "tbl",
+   "properties": {"columns": ["id:uuid:pk", "customer_id:uuid", "total:numeric"]}},
+  {"op": "connect", "type": "reads_writes", "source": "@repo", "target": "@tbl"},
+  {"op": "link_requirement", "target_id": "@db", "requirement_id": "FR-001"},
+  {"op": "link_requirement", "target_id": "@api", "requirement_id": "FR-001"}
+]
