@@ -1,3 +1,0 @@
-{"_default": {"effective_date": "2025-01-01"},
- "policies/data_access_policy.md": {"kind": "policy"},
- "data/dwh_data_dictionary.csv": {"allowed_roles": []}}
